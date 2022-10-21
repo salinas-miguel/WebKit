@@ -84,6 +84,7 @@ IDBTransaction::IDBTransaction(IDBDatabase& database, const IDBTransactionInfo& 
     , m_currentlyCompletingRequest(request)
 
 {
+    WTFReportBacktrace();
     LOG(IndexedDB, "IDBTransaction::IDBTransaction - %s", m_info.loggingString().utf8().data());
     ASSERT(canCurrentThreadAccessThreadLocalData(m_database->originThread()));
 
@@ -631,6 +632,8 @@ void IDBTransaction::dispatchEvent(Event& event)
     ASSERT(event.type() == eventNames().completeEvent || event.type() == eventNames().abortEvent);
     m_didDispatchAbortOrCommit = true;
 
+    if (!m_openDBRequest)
+        WTFReportBacktrace();
     if (isVersionChange() && m_openDBRequest) {
         m_openDBRequest->versionChangeTransactionDidFinish();
 

@@ -135,6 +135,7 @@ ExceptionOr<short> IDBFactory::cmp(JSGlobalObject& execState, JSValue firstValue
 
 void IDBFactory::databases(ScriptExecutionContext& context, IDBDatabasesResponsePromise&& promise)
 {
+    WTFReportBacktrace();
     LOG(IndexedDB, "IDBFactory::databases");
 
     if (shouldThrowSecurityException(context)) {

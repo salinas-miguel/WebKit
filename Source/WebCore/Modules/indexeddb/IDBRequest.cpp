@@ -107,6 +107,7 @@ IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBObjectStore& objectSt
     , m_source(&objectStore)
     , m_connectionProxy(transaction.database().connectionProxy())
 {
+    WTFReportBacktrace();
 }
 
 IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBCursor& cursor, IDBTransaction& transaction)
@@ -117,6 +118,7 @@ IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBCursor& cursor, IDBTr
     , m_pendingCursor(&cursor)
     , m_connectionProxy(transaction.database().connectionProxy())
 {
+    WTFReportBacktrace();
     WTF::switchOn(cursor.source(),
         [this] (const auto& value) { this->m_source = IDBRequest::Source { value }; }
     );
@@ -132,6 +134,7 @@ IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBIndex& index, IDBTran
     , m_source(&index)
     , m_connectionProxy(transaction.database().connectionProxy())
 {
+    WTFReportBacktrace();
 }
 
 IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBObjectStore& objectStore, IndexedDB::ObjectStoreRecordType type, IDBTransaction& transaction)
@@ -143,6 +146,7 @@ IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBObjectStore& objectSt
     , m_connectionProxy(transaction.database().connectionProxy())
     , m_requestedObjectStoreRecordType(type)
 {
+    WTFReportBacktrace();
 }
 
 IDBRequest::IDBRequest(ScriptExecutionContext& context, IDBIndex& index, IndexedDB::IndexRecordType requestedRecordType, IDBTransaction& transaction)
@@ -192,6 +196,7 @@ void IDBRequest::setVersionChangeTransaction(IDBTransaction& transaction)
     ASSERT(!m_transaction);
     ASSERT(transaction.isVersionChange());
     ASSERT(!transaction.isFinishedOrFinishing());
+    WTFReportBacktrace();
 
     m_transaction = &transaction;
 }
@@ -199,6 +204,7 @@ void IDBRequest::setVersionChangeTransaction(IDBTransaction& transaction)
 RefPtr<WebCore::IDBTransaction> IDBRequest::transaction() const
 {
     ASSERT(canCurrentThreadAccessThreadLocalData(originThread()));
+    WTFReportBacktrace();
     return m_shouldExposeTransactionToDOM ? m_transaction : nullptr;
 }
 
