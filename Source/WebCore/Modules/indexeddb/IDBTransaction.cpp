@@ -632,9 +632,11 @@ void IDBTransaction::dispatchEvent(Event& event)
     ASSERT(event.type() == eventNames().completeEvent || event.type() == eventNames().abortEvent);
     m_didDispatchAbortOrCommit = true;
 
-    if (!m_openDBRequest)
+    if (!m_openDBRequest) {
         WTFReportBacktrace();
-    if (isVersionChange() && m_openDBRequest) {
+        WTFLogAlways("CRASH");
+    }
+    if (isVersionChange()) {
         m_openDBRequest->versionChangeTransactionDidFinish();
 
         if (event.type() == eventNames().completeEvent) {
